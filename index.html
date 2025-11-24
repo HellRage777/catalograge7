@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HellRage-BeatStore - Магазин битов</title>
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Шапка сайта */
+        header {
+            background-color: #000;
+            border-bottom: 2px solid #ff0000;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff0000;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        
+        nav ul li a:hover {
+            color: #ff0000;
+        }
+        
+        /* Главный баннер */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://source.unsplash.com/random/1200x600/?music,studio') no-repeat center center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #ff0000;
+            text-transform: uppercase;
+        }
+        
+        .hero-content p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #ff0000;
+            color: #fff;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn:hover {
+            background-color: #cc0000;
+        }
+        
+        /* Секция с битами */
+        .beats-section {
+            padding: 80px 0;
+            display: block;
+        }
+        
+        .about-section {
+            padding: 80px 0;
+            display: none;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #ff0000;
+            font-size: 36px;
+            text-transform: uppercase;
+        }
+        
+        .beats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .beat-card {
+            background-color: #111;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid #333;
+        }
+        
+        .beat-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff0000;
+        }
+        
+        .beat-image {
+            height: 200px;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff0000;
+            font-size: 24px;
+            position: relative;
+        }
+        
+        .beat-info {
+            padding: 20px;
+
+Данила, [24.11.2025 16:58]
+}
+        
+        .beat-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .beat-producer {
+            color: #ff0000;
+            margin-bottom: 10px;
+        }
+        
+        .beat-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff0000;
+            margin-bottom: 15px;
+        }
+        
+        .beat-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .play-btn {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .play-btn:hover {
+            background-color: #ff0000;
+        }
+        
+        .play-btn.playing {
+            background-color: #ff0000;
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .about-content p {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #111;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid #ff0000;
+        }
+        
+        .modal h2 {
+            color: #ff0000;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .modal p {
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        
+        .contact-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .contact-btn:hover {
+            background-color: #ff0000;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Подвал */
+        footer {
+            background-color: #000;
+            border-top: 2px solid #ff0000;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff0000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .footer-links {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        
+        .footer-links a:hover {
+            color: #ff0000;
+        }
+
+Данила, [24.11.2025 16:58]
+.copyright {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+            }
+            
+            .hero-content h1 {
+                font-size: 36px;
+            }
+            
+            .beats-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .contact-buttons {
+                flex-direction: column;
+            }
+            
+            .beat-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка сайта -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="showSection('home')">HellRage-BeatStore</div>
+                <nav>
+                    <ul>
+                        <li><a onclick="showSection('home')">Главная</a></li>
+                        <li><a onclick="showSection('beats')">Биты</a></li>
+                        <li><a onclick="showSection('about')">О нас</a></li>
+                        <li><a onclick="showModal()">Контакты</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Главный баннер -->
+    <section class="hero" id="home-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Лучшие биты для вашего творчества</h1>
+                <p>Качественные продакшены по доступным ценам</p>
+                <a class="btn" onclick="showSection('beats')">Смотреть каталог</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция с битами -->
+    <section class="beats-section" id="beats-section">
+        <div class="container">
+            <h2 class="section-title">Популярные биты</h2>
+            <div class="beats-grid">
+                <!-- Бит 1 -->
+                <div class="beat-card">
+                    <div class="beat-image">Тип бита: Trap</div>
+                    <div class="beat-info">
+                        <h3 class="beat-title">Dark Night</h3>
+                        <p class="beat-producer">Producer: HellRage</p>
+                        <p class="beat-price">$49.99</p>
+                        <div class="beat-actions">
+                            <button class="btn">Купить</button>
+                            <button class="play-btn" onclick="togglePlay('beat1')">▶️</button>
+                        </div>
+                        <audio id="beat1" class="audio-player" controls>
+                            <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+                            Ваш браузер не поддерживает аудио элемент.
+                        </audio>
+                    </div>
+                </div>
+                
+                <!-- Бит 2 -->
+                <div class="beat-card">
+                    <div class="beat-image">Тип бита: Drill</div>
+                    <div class="beat-info">
+                        <h3 class="beat-title">Street King</h3>
+                        <p class="beat-producer">Producer: HellRage</p>
+                        <p class="beat-price">$59.99</p>
+                        <div class="beat-actions">
+                            <button class="btn">Купить</button>
+                            <button class="play-btn" onclick="togglePlay('beat2')">▶️</button>
+                        </div>
+                        <audio id="beat2" class="audio-player" controls>
+                            <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+                            Ваш браузер не поддерживает аудио элемент.
+                        </audio>
+                    </div>
+                </div>
+                
+                <!-- Бит 3 -->
+                <div class="beat-card">
+
+Данила, [24.11.2025 16:58]
+<div class="beat-image">Тип бита: Hip-Hop</div>
+                    <div class="beat-info">
+                        <h3 class="beat-title">Old School Vibe</h3>
+                        <p class="beat-producer">Producer: HellRage</p>
+                        <p class="beat-price">$39.99</p>
+                        <div class="beat-actions">
+                            <button class="btn">Купить</button>
+                            <button class="play-btn" onclick="togglePlay('beat3')">▶️</button>
+                        </div>
+                        <audio id="beat3" class="audio-player" controls>
+                            <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+                            Ваш браузер не поддерживает аудио элемент.
+                        </audio>
+                    </div>
+                </div>
+                
+                <!-- Бит 4 -->
+                <div class="beat-card">
+                    <div class="beat-image">Тип бита: R&B</div>
+                    <div class="beat-info">
+                        <h3 class="beat-title">Midnight Love</h3>
+                        <p class="beat-producer">Producer: HellRage</p>
+                        <p class="beat-price">$44.99</p>
+                        <div class="beat-actions">
+                            <button class="btn">Купить</button>
+                            <button class="play-btn" onclick="togglePlay('beat4')">▶️</button>
+                        </div>
+                        <audio id="beat4" class="audio-player" controls>
+                            <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+                            Ваш браузер не поддерживает аудио элемент.
+                        </audio>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция "О нас" -->
+    <section class="about-section" id="about-section">
+        <div class="container">
+            <h2 class="section-title">О нас</h2>
+            <div class="about-content">
+                <p>HellRage-BeatStore - это ведущий магазин битов для современных артистов и продюсеров.</p>
+                <p>Добавить опписание.</p>
+                <p>Добавить опписание.</p>
+                <p>Добавить опписание.</p>
+                <p>Присоединяйтесь к сообществу HellRage-BeatStore и найдите идеальный бит для вашего следующего хита!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Модальное окно контактов -->
+    <div class="modal" id="contact-modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2>Контакты</h2>
+            <p>Свяжитесь с нами через Telegram для заказа битов или сотрудничества</p>
+            <div class="contact-buttons">
+                <a href="https://t.me/ThisRage" class="contact-btn" target="_blank">
+                    <span>Написать в Telegram</span>
+                </a>
+                <a href="https://t.me/ProductionHell" class="contact-btn" target="_blank">
+                    <span>Наш Telegram-канал</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">HellRage-BeatStore</div>
+                <div class="footer-links">
+                    <a onclick="showSection('home')">Главная</a>
+                    <a onclick="showSection('beats')">Биты</a>
+                    <a onclick="showSection('about')">О нас</a>
+                    <a onclick="showModal()">Контакты</a>
+                </div>
+                <p class="copyright">&copy; ⓒ 2025 HellRage-BeatStore. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+Данила, [24.11.2025 16:58]
+<script>
+        // Функция для показа/скрытия секций
+        function showSection(section) {
+            // Скрываем все секции
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('beats-section').style.display = 'none';
+            document.getElementById('about-section').style.display = 'none';
+            
+            // Показываем нужную секцию
+            if (section === 'home') {
+                document.getElementById('home-section').style.display = 'flex';
+            } else if (section === 'beats') {
+                document.getElementById('beats-section').style.display = 'block';
+            } else if (section === 'about') {
+                document.getElementById('about-section').style.display = 'block';
+            }
+            
+            // Прокручиваем к верху страницы
+            window.scrollTo(0, 0);
+        }
+        
+        // Функция для показа модального окна
+        function showModal() {
+            document.getElementById('contact-modal').style.display = 'flex';
+        }
+        
+        // Функция для закрытия модального окна
+        function closeModal() {
+            document.getElementById('contact-modal').style.display = 'none';
+        }
+        
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('contact-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Функция для воспроизведения/паузы бита
+        function togglePlay(audioId) {
+            const audio = document.getElementById(audioId);
+            const playBtn = audio.previousElementSibling.querySelector('.play-btn');
+            
+            // Останавливаем все другие аудио
+            document.querySelectorAll('audio').forEach(a => {
+                if (a.id !== audioId) {
+                    a.pause();
+                    a.previousElementSibling.querySelector('.play-btn').classList.remove('playing');
+                    a.previousElementSibling.querySelector('.play-btn').textContent = '▶️';
+                }
+            });
+            
+            if (audio.paused) {
+                audio.play();
+                playBtn.classList.add('playing');
+                playBtn.textContent = '❚❚';
+            } else {
+                audio.pause();
+                playBtn.classList.remove('playing');
+                playBtn.textContent = '▶️';
+            }
+        }
+        
+        // Сброс кнопки воспроизведения, когда аудио заканчивается
+        document.querySelectorAll('audio').forEach(audio => {
+            audio.addEventListener('ended', function() {
+                const playBtn = this.previousElementSibling.querySelector('.play-btn');
+                playBtn.classList.remove('playing');
+                playBtn.textContent = '▶️';
+            });
+        });
+        
+        // Показываем главную страницу при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('home');
+        });
+    </script>
+</body>
+</html>
